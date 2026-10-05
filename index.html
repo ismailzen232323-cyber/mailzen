@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NeonLAN: Panduan Merangkai Kabel LAN & Sharing Data Peer to Peer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#000;--panel:#07101c;--line:#0f3a66;--neon:#00c8ff;--neon2:#2f6bff;--text:#e6f3ff;--mute:#8fa9c4;
+--glow:0 0 18px rgba(0,200,255,.45)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{background:var(--bg);color:var(--text);font:400 16px/1.7 Manrope,system-ui,sans-serif}
+h1,h2,h3{font-family:'Chakra Petch',sans-serif;line-height:1.2}
+a{color:var(--neon)}
+:focus-visible{outline:2px solid var(--neon);outline-offset:3px}
+
+nav{position:sticky;top:0;z-index:10;background:rgba(0,0,0,.88);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);
+display:flex;gap:6px;align-items:center;padding:10px 5vw;overflow-x:auto}
+nav b{font-family:'Chakra Petch';color:var(--neon);margin-right:auto;white-space:nowrap;text-shadow:var(--glow)}
+nav a{color:var(--mute);text-decoration:none;padding:6px 12px;border-radius:6px;font-size:14px;white-space:nowrap}
+nav a:hover{color:var(--neon);background:#0a1e33}
+
+main{max-width:1080px;margin:auto;padding:0 5vw 80px}
+section{padding:56px 0 8px}
+h2{font-size:clamp(1.5rem,3.5vw,2.1rem);margin-bottom:8px;color:#fff}
+h2::after{content:"";display:block;width:64px;height:3px;margin-top:10px;background:linear-gradient(90deg,var(--neon),var(--neon2));box-shadow:var(--glow)}
+.lead{color:var(--mute);margin:14px 0 22px;max-width:70ch}
+
+/* Dashboard / hero */
+.hero{padding:64px 0 24px;display:grid;gap:28px}
+.hero h1{font-size:clamp(2.4rem,8vw,5rem);color:var(--neon);text-shadow:0 0 14px rgba(0,200,255,.7),0 0 46px rgba(47,107,255,.55);letter-spacing:-1px}
+.hero p{color:var(--mute);max-width:60ch;font-size:1.1rem}
+.id{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--glow)}
+.id div{background:var(--panel);padding:16px 18px}
+.id small{display:block;color:var(--mute);font-size:13px}
+.id strong{font-family:'Chakra Petch';font-size:1.15rem;color:#fff}
+
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:22px;margin-top:16px}
+.card h3{color:var(--neon);margin-bottom:8px;font-size:1.2rem}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+ul,ol{padding-left:22px}li{margin:4px 0}
+
+table{width:100%;border-collapse:collapse;min-width:520px}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:12px;margin-top:16px}
+th,td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:#0a1e33;color:var(--neon);font-family:'Chakra Petch'}
+tr:last-child td{border-bottom:0}
+
+.pins{display:grid;grid-template-columns:auto 1fr 1fr;gap:6px 12px;align-items:center;margin-top:10px;font-size:14px}
+.pins .h{color:var(--mute)}
+.chip{display:inline-block;width:46px;height:12px;border-radius:3px;vertical-align:middle;margin-right:8px;border:1px solid #ffffff33}
+.wo{background:repeating-linear-gradient(90deg,#fff 0 6px,#ff8a00 6px 12px)}.o{background:#ff8a00}
+.wg{background:repeating-linear-gradient(90deg,#fff 0 6px,#1fbf4a 6px 12px)}.g{background:#1fbf4a}
+.b{background:#1e6bff}.wb{background:repeating-linear-gradient(90deg,#fff 0 6px,#1e6bff 6px 12px)}
+.wn{background:repeating-linear-gradient(90deg,#fff 0 6px,#7a4a21 6px 12px)}.n{background:#7a4a21}
+
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:14px 16px 14px 60px;margin:10px 0;background:var(--panel);border:1px solid var(--line);border-radius:10px}
+.steps li::before{content:counter(s);position:absolute;left:14px;top:12px;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font:700 15px 'Chakra Petch';color:#000;background:var(--neon);box-shadow:var(--glow)}
+
+/* Preview PPT & video */
+.frame{position:relative;width:100%;aspect-ratio:16/9;border:1px solid var(--neon);border-radius:12px;overflow:hidden;background:#000;box-shadow:var(--glow);margin-top:16px}
+.frame iframe,.frame video{position:absolute;inset:0;width:100%;height:100%;border:0}
+.note{font-size:14px;color:var(--mute);margin-top:8px}
+code{background:#0a1e33;color:var(--neon);padding:2px 6px;border-radius:4px}
+footer{text-align:center;color:var(--mute);border-top:1px solid var(--line);padding:24px 5vw;font-size:14px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<nav>
+  <b>NeonLAN</b>
+  <a href="#dashboard">Dashboard</a><a href="#pengertian">Pengertian</a><a href="#perbedaan">Perbedaan</a>
+  <a href="#alat">Alat & Bahan</a><a href="#cara">Cara Merangkai</a><a href="#sharing">Sharing Data</a>
+  <a href="#ppt">Preview PPT</a><a href="#video">Video Tutorial</a>
+</nav>
+
+<main>
+
+<!-- DASHBOARD -->
+<header class="hero" id="dashboard">
+  <h1>NeonLAN</h1>
+  <p>Panduan merangkai kabel LAN (straight &amp; cross-over) dan sharing data peer to peer, lengkap dengan presentasi dan video tutorial.</p>
+  <div class="id" aria-label="Identitas mahasiswa">
+    <div><small>Nama</small><strong>Ismail Zen</strong></div>
+    <div><small>NIM</small><strong>62640723222</strong></div>
+    <div><small>Kelas</small><strong>1TIB</strong></div>
+    <div><small>Mata Kuliah</small><strong>Jaringan Komputer</strong></div>
+  </div>
+</header>
+
+<!-- MATERI -->
+<section id="pengertian">
+  <h2>Pengertian Kabel LAN</h2>
+  <p class="lead">Kabel LAN (UTP) adalah kabel berisi 8 helai kabel kecil yang terbagi menjadi 4 pasang berpilin. Kabel ini menghubungkan perangkat dalam satu jaringan lokal (Local Area Network) lewat konektor RJ-45.</p>
+  <div class="grid2">
+    <div class="card"><h3>Kabel Straight</h3><p>Susunan warna di kedua ujung kabel sama persis (T568B – T568B). Dipakai untuk menghubungkan perangkat yang <em>berbeda jenis</em>, misalnya komputer ke switch/hub atau komputer ke router.</p></div>
+    <div class="card"><h3>Kabel Cross-over</h3><p>Susunan warna di kedua ujung berbeda (T568B – T568A), sehingga jalur kirim dan terima bersilang. Dipakai untuk menghubungkan perangkat yang <em>sejenis</em>, misalnya komputer ke komputer secara langsung.</p></div>
+  </div>
+</section>
+
+<section id="perbedaan">
+  <h2>Perbedaan Straight dan Cross-over</h2>
+  <div class="scroll"><table>
+    <tr><th>Aspek</th><th>Straight</th><th>Cross-over</th></tr>
+    <tr><td>Susunan ujung</td><td>T568B – T568B</td><td>T568B – T568A</td></tr>
+    <tr><td>Pin yang bersilang</td><td>Tidak ada</td><td>Pin 1↔3 dan 2↔6</td></tr>
+    <tr><td>Menghubungkan</td><td>Perangkat berbeda jenis (PC–Switch, PC–Router)</td><td>Perangkat sejenis (PC–PC, Switch–Switch)</td></tr>
+    <tr><td>Kegunaan utama</td><td>Jaringan dengan switch/hub</td><td>Peer to peer langsung tanpa switch</td></tr>
+  </table></div>
+  <p class="note">Catatan: kebanyakan kartu jaringan modern punya fitur Auto MDI-X, sehingga kabel straight pun sering tetap bisa dipakai PC ke PC. Tetap pelajari cross-over karena menjadi dasar teori.</p>
+
+  <div class="grid2">
+    <div class="card"><h3>Urutan warna Straight</h3>
+      <div class="pins"><span class="h">Pin</span><span class="h">Ujung A (T568B)</span><span class="h">Ujung B (T568B)</span>
+        <span>1</span><span><i class="chip wo"></i>Putih oranye</span><span><i class="chip wo"></i>Putih oranye</span>
+        <span>2</span><span><i class="chip o"></i>Oranye</span><span><i class="chip o"></i>Oranye</span>
+        <span>3</span><span><i class="chip wg"></i>Putih hijau</span><span><i class="chip wg"></i>Putih hijau</span>
+        <span>4</span><span><i class="chip b"></i>Biru</span><span><i class="chip b"></i>Biru</span>
+        <span>5</span><span><i class="chip wb"></i>Putih biru</span><span><i class="chip wb"></i>Putih biru</span>
+        <span>6</span><span><i class="chip g"></i>Hijau</span><span><i class="chip g"></i>Hijau</span>
+        <span>7</span><span><i class="chip wn"></i>Putih coklat</span><span><i class="chip wn"></i>Putih coklat</span>
+        <span>8</span><span><i class="chip n"></i>Coklat</span><span><i class="chip n"></i>Coklat</span>
+      </div></div>
+    <div class="card"><h3>Urutan warna Cross-over</h3>
+      <div class="pins"><span class="h">Pin</span><span class="h">Ujung A (T568B)</span><span class="h">Ujung B (T568A)</span>
+        <span>1</span><span><i class="chip wo"></i>Putih oranye</span><span><i class="chip wg"></i>Putih hijau</span>
+        <span>2</span><span><i class="chip o"></i>Oranye</span><span><i class="chip g"></i>Hijau</span>
+        <span>3</span><span><i class="chip wg"></i>Putih hijau</span><span><i class="chip wo"></i>Putih oranye</span>
+        <span>4</span><span><i class="chip b"></i>Biru</span><span><i class="chip b"></i>Biru</span>
+        <span>5</span><span><i class="chip wb"></i>Putih biru</span><span><i class="chip wb"></i>Putih biru</span>
+        <span>6</span><span><i class="chip g"></i>Hijau</span><span><i class="chip o"></i>Oranye</span>
+        <span>7</span><span><i class="chip wn"></i>Putih coklat</span><span><i class="chip wn"></i>Putih coklat</span>
+        <span>8</span><span><i class="chip n"></i>Coklat</span><span><i class="chip n"></i>Coklat</span>
+      </div></div>
+  </div>
+</section>
+
+<section id="alat">
+  <h2>Alat dan Bahan</h2>
+  <div class="grid2">
+    <div class="card"><h3>Alat</h3><ul>
+      <li>Crimping tool (tang crimping RJ-45)</li><li>Cutter atau pengupas kabel (stripper)</li>
+      <li>LAN tester</li><li>Gunting / pemotong kabel</li></ul></div>
+    <div class="card"><h3>Bahan</h3><ul>
+      <li>Kabel UTP Cat5e / Cat6 secukupnya</li><li>Konektor RJ-45</li>
+      <li>Boot konektor (opsional)</li></ul></div>
+  </div>
+</section>
+
+<section id="cara">
+  <h2>Cara Merangkai Kabel LAN</h2>
+  <p class="lead">Langkah sama untuk kedua tipe. Bedanya hanya pada urutan warna di ujung kedua.</p>
+  <ol class="steps">
+    <li>Potong kabel UTP sesuai kebutuhan, lalu kupas selubung luar sekitar 2–3 cm tanpa melukai kabel kecil di dalamnya.</li>
+    <li>Urai 4 pasang kabel, luruskan, lalu susun sesuai urutan warna. Straight: T568B di kedua ujung. Cross-over: T568B di ujung pertama, T568A di ujung kedua.</li>
+    <li>Rapikan dan potong rata ujung kabel, sisakan sekitar 1,2 cm dari selubung.</li>
+    <li>Masukkan kabel ke konektor RJ-45 (klip menghadap ke bawah) sampai semua ujung kabel menyentuh bagian depan konektor.</li>
+    <li>Jepit konektor dengan crimping tool sampai terdengar bunyi klik.</li>
+    <li>Ulangi di ujung lainnya, lalu uji dengan LAN tester. Lampu 1 sampai 8 harus menyala berurutan (straight) atau 1↔3 dan 2↔6 bersilang (cross-over).</li>
+  </ol>
+</section>
+
+<section id="sharing">
+  <h2>Sharing Data dengan Kabel LAN</h2>
+  <div class="grid2">
+    <div class="card"><h3>Alat untuk sharing data</h3><ul>
+      <li>2 komputer/laptop dengan port LAN (Ethernet)</li>
+      <li>1 kabel LAN cross-over (atau straight bila NIC mendukung Auto MDI-X)</li>
+      <li>Sistem operasi dengan fitur file sharing (misal Windows)</li></ul></div>
+    <div class="card"><h3>Konsep Peer to Peer</h3><p>Dua komputer terhubung langsung dan saling berbagi file tanpa server. Setiap komputer bisa menjadi pengirim sekaligus penerima.</p></div>
+  </div>
+  <h3 style="margin-top:28px">Cara sharing data</h3>
+  <ol class="steps">
+    <li>Hubungkan kedua komputer dengan kabel LAN ke port Ethernet masing-masing.</li>
+    <li>Atur IP address manual: Control Panel → Network and Sharing Center → Ethernet → Properties → Internet Protocol Version 4 (TCP/IPv4).</li>
+    <li>PC 1: IP <code>192.168.1.1</code>, Subnet mask <code>255.255.255.0</code>. PC 2: IP <code>192.168.1.2</code>, Subnet mask <code>255.255.255.0</code>.</li>
+    <li>Buka Advanced sharing settings, aktifkan <b>Network discovery</b> dan <b>File and printer sharing</b>.</li>
+    <li>Klik kanan folder yang ingin dibagikan → Properties → tab Sharing → Share, pilih pengguna dan izin akses (Read atau Read/Write).</li>
+    <li>Uji koneksi: buka Command Prompt lalu ketik <code>ping 192.168.1.2</code> dari PC 1. Balasan "Reply from..." menandakan terhubung.</li>
+    <li>Dari PC 2, buka File Explorer dan ketik <code>\\192.168.1.1</code> di address bar untuk mengakses folder yang dibagikan.</li>
+  </ol>
+</section>
+
+<!-- PREVIEW PPT -->
+<section id="ppt">
+  <h2>Preview Presentasi (PPT)</h2>
+  <p class="lead">Presentasi tampil langsung di halaman ini, termasuk animasinya.</p>
+  <div class="frame"><iframe id="pptFrame" title="Preview PPT" allowfullscreen></iframe></div>
+  <p class="note">Ganti link PPT pada bagian <code>CONFIG</code> di script bawah halaman.</p>
+</section>
+
+<!-- VIDEO -->
+<section id="video">
+  <h2>Video Tutorial</h2>
+  <div class="grid2">
+    <div><h3>Tutorial Merangkai Kabel LAN</h3>
+      <div class="frame"><iframe id="video1" title="Tutorial merangkai kabel LAN" allow="accelerometer; encrypted-media; picture-in-picture" allowfullscreen></iframe></div></div>
+    <div><h3>Tutorial Sharing Data Peer to Peer</h3>
+      <div class="frame"><iframe id="video2" title="Tutorial sharing data peer to peer" allow="accelerometer; encrypted-media; picture-in-picture" allowfullscreen></iframe></div></div>
+  </div>
+</section>
+
+</main>
+
+<footer>NeonLAN · Ismail Zen · 62640723222 · 1TIB · Jaringan Komputer</footer>
+
+<script>
+/* ===== CONFIG: ganti 3 link di bawah ini =====
+ PPT   : upload file .pptx ke hosting publik (Google Drive/OneDrive/GitHub Pages/server sendiri),
+         lalu tempel link langsungnya di PPT_URL. Embed Office Online akan menampilkan animasi.
+         (Alternatif: link "Embed" dari Google Slides → Publish to web, tempel utuh di PPT_SRC.)
+ Video : tempel link embed (contoh YouTube: https://www.youtube.com/embed/ID_VIDEO)
+         atau file video langsung (.mp4) di VIDEO_1 / VIDEO_2. */
+const PPT_URL = "https://domain-kamu.com/materi-lan.pptx";
+const PPT_SRC = ""; // opsional: isi bila pakai Google Slides, mengalahkan PPT_URL
+const VIDEO_1 = "https://www.youtube.com/embed/ID_VIDEO_1"; // merangkai kabel LAN
+const VIDEO_2 = "https://www.youtube.com/embed/ID_VIDEO_2"; // sharing data peer to peer
+/* ============================================= */
+
+document.getElementById("pptFrame").src = PPT_SRC ||
+  "https://view.officeapps.live.com/op/embed.aspx?src=" + encodeURIComponent(PPT_URL);
+
+function setVideo(id, url){
+  const el = document.getElementById(id);
+  if (/\.(mp4|webm|ogg)(\?.*)?$/i.test(url)) {
+    const v = document.createElement("video");
+    v.src = url; v.controls = true; v.preload = "metadata";
+    el.replaceWith(v);
+  } else { el.src = url; }
+}
+setVideo("video1", VIDEO_1);
+setVideo("video2", VIDEO_2);
+</script>
+</body>
+</html>
