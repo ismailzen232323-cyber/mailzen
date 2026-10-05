@@ -209,31 +209,111 @@ footer{text-align:center;color:var(--mute);border-top:1px solid var(--line);padd
 <footer>NeonLAN · Ismail Zen · 62640723222 · 1TIB · Jaringan Komputer</footer>
 
 <script>
-/* ===== CONFIG: ganti 3 link di bawah ini =====
- PPT   : upload file .pptx ke hosting publik (Google Drive/OneDrive/GitHub Pages/server sendiri),
-         lalu tempel link langsungnya di PPT_URL. Embed Office Online akan menampilkan animasi.
-         (Alternatif: link "Embed" dari Google Slides → Publish to web, tempel utuh di PPT_SRC.)
- Video : tempel link embed (contoh YouTube: https://www.youtube.com/embed/ID_VIDEO)
-         atau file video langsung (.mp4) di VIDEO_1 / VIDEO_2. */
-const PPT_URL = "https://domain-kamu.com/materi-lan.pptx";
-const PPT_SRC = ""; // opsional: isi bila pakai Google Slides, mengalahkan PPT_URL
-const VIDEO_1 = "https://www.youtube.com/embed/ID_VIDEO_1"; // merangkai kabel LAN
-const VIDEO_2 = "https://www.youtube.com/embed/ID_VIDEO_2"; // sharing data peer to peer
-/* ============================================= */
 
-document.getElementById("pptFrame").src = PPT_SRC ||
-  "https://view.officeapps.live.com/op/embed.aspx?src=" + encodeURIComponent(PPT_URL);
+const PPT_FILE = "ppt/materi-lan.pptx";
 
-function setVideo(id, url){
-  const el = document.getElementById(id);
-  if (/\.(mp4|webm|ogg)(\?.*)?$/i.test(url)) {
-    const v = document.createElement("video");
-    v.src = url; v.controls = true; v.preload = "metadata";
-    el.replaceWith(v);
-  } else { el.src = url; }
+
+
+const VIDEO_1_FILE = "video/merangkai-kabel-lan.mp4";
+const VIDEO_2_FILE = "video/sharing-data-lan.mp4";
+
+
+const pptFrame = document.getElementById("pptFrame");
+
+
+
+const pptURL =
+  window.location.origin + "/" + PPT_FILE;
+
+
+pptFrame.src =
+  "https://view.officeapps.live.com/op/embed.aspx?src=" +
+  encodeURIComponent(pptURL);
+
+
+function createVideo(id, file) {
+
+  const oldElement = document.getElementById(id);
+
+  if (!oldElement) return;
+
+  const video = document.createElement("video");
+
+  video.src = file;
+
+  video.controls = true;
+
+  video.preload = "metadata";
+
+  video.playsInline = true;
+
+  video.setAttribute(
+    "controlsList",
+    "nodownload"
+  );
+
+  video.style.position = "absolute";
+  video.style.inset = "0";
+  video.style.width = "100%";
+  video.style.height = "100%";
+  video.style.objectFit = "contain";
+  video.style.background = "#000";
+
+  oldElement.replaceWith(video);
 }
-setVideo("video1", VIDEO_1);
-setVideo("video2", VIDEO_2);
+
+
+createVideo(
+  "video1",
+  VIDEO_1_FILE
+);
+
+createVideo(
+  "video2",
+  VIDEO_2_FILE
+);
+
+
+const cards = document.querySelectorAll(
+  ".card, .steps li, .id div"
+);
+
+const observer = new IntersectionObserver(
+  entries => {
+
+    entries.forEach(entry => {
+
+      if (entry.isIntersecting) {
+
+        entry.target.style.opacity = "1";
+
+        entry.target.style.transform =
+          "translateY(0)";
+
+      }
+
+    });
+
+  },
+  {
+    threshold: 0.1
+  }
+);
+
+
+cards.forEach(card => {
+
+  card.style.opacity = "0";
+
+  card.style.transform =
+    "translateY(15px)";
+
+  card.style.transition =
+    "opacity .5s ease, transform .5s ease";
+
+  observer.observe(card);
+
+});
 </script>
 </body>
 </html>
