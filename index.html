@@ -1744,7 +1744,48 @@ function openPPTFullscreen(){
 }
 
 </script>
+<script>
+window.addEventListener("load", function () {
 
+  var ppt = document.getElementById("ppt");
+  var video = document.getElementById("video");
+
+  if (ppt) {
+    ppt.innerHTML = `
+      <div class="section-title">
+        <small>07 — PRESENTATION</small>
+        <h2>Preview PowerPoint</h2>
+        <p>Presentasi praktikum ditampilkan langsung dari file di repo.</p>
+      </div>
+      <div class="preview-header">
+        <strong>presentasi.pptx.pdf</strong>
+        <a class="btn" href="presentasi.pptx.pdf" download>Unduh PDF</a>
+      </div>
+      <iframe class="viewer" src="presentasi.pptx.pdf" title="Preview PowerPoint"></iframe>
+    `;
+  }
+
+  if (video) {
+    video.innerHTML = `
+      <div class="section-title">
+        <small>08 — VIDEO TUTORIAL</small>
+        <h2>Video Tutorial</h2>
+      </div>
+      <div class="video-grid">
+        <div class="video-card">
+          <h3>01 — Merangkai Kabel LAN</h3>
+          <video controls preload="metadata" src="video01.mp4.mp4"></video>
+        </div>
+        <div class="video-card">
+          <h3>02 — Sharing Data Peer-to-Peer</h3>
+          <video controls preload="metadata" src="video02.mp4.mp4"></video>
+        </div>
+      </div>
+    `;
+  }
+
+});
+</script>
 </body>
 </html>
 ```
